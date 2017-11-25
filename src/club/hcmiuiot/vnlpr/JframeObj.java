@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class JframeObj implements Comparable<JframeObj> {
+public class JFrameObj implements Comparable<JFrameObj> {
 	private JFrame jFrame;
 	private String name;
 	private JLabel lbl = new JLabel();
@@ -22,7 +22,7 @@ public class JframeObj implements Comparable<JframeObj> {
 		return name;
 	}
 	
-	public JframeObj(String name) {
+	public JFrameObj(String name) {
 		jFrame = new JFrame(name);
 		jFrame.setLayout(new FlowLayout());
 		//lbl.setIcon(icon);
@@ -37,7 +37,7 @@ public class JframeObj implements Comparable<JframeObj> {
 		jFrame.setVisible(true);
 	}
 	
-	public JframeObj(JFrame jFrame, String name) {
+	public JFrameObj(JFrame jFrame, String name) {
 		this.jFrame = jFrame;
 		this.name = name;
 	}
@@ -46,7 +46,7 @@ public class JframeObj implements Comparable<JframeObj> {
 	}
 	
 	@Override
-	public int compareTo(JframeObj o) {
+	public int compareTo(JFrameObj o) {
 		return getName().compareTo(o.getName());
 	}
 	

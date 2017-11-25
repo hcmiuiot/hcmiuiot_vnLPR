@@ -1,11 +1,12 @@
 package club.hcmiuiot.vnlpr;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.opencv.core.*;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
+import org.opencv.imgcodecs.*;
+import org.opencv.imgproc.*;
+import org.opencv.ml.*;
+import org.opencv.videoio.VideoCapture;
 
 public class LPRengine {
 	
@@ -13,7 +14,29 @@ public class LPRengine {
 	
 	public static void main(String[] args) {
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
-		Mat src = Imgcodecs.imread("img/bike/0.jpg");
+		VideoCapture vc = new VideoCapture(0);
+		
+		boolean b = true;
+		
+		while (b == true) {
+			Mat a = new Mat();
+			Mat c = new Mat();
+			vc.read(a);
+			//Mat gra = new Mat();
+			//Imgproc.cvtColor(a,gra,Imgproc.COLOR_BGR2GRAY);
+			ArrayList<Rect> faces = FaceDetect.regFace(a);
+			for (int i=0;i<faces.toArray().length;i++) {
+				Imgproc.rectangle(a, faces.get(i).tl(), faces.get(i).br(), new Scalar(0,0,255));
+				c = new Mat(a, faces.get(i));
+				//Imgproc.pyrUp(c, c, 3);
+				Debug.imshow("Face" + i, c);
+			}
+			
+			Debug.imshow("Video", a);
+		}
+		
+		Mat src = Imgcodecs.imread("img/car/5.jpg");
+		//Mat src = new Mat();
 		//Debug.imshow("Source", src);
 		
 		Mat gray = new Mat();
@@ -47,7 +70,7 @@ public class LPRengine {
 		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
 		Mat hierachy = new Mat();
 		
-		Imgproc.findContours(dilated, contours, hierachy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+		Imgproc.findContours(dilated, contours, hierachy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
 		for (int i = 0; i < contours.size(); i++) {
 			//hasChild

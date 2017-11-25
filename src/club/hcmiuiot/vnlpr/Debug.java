@@ -15,7 +15,7 @@ import org.opencv.core.Mat;
 
 public class Debug {
 
-	private static ArrayList<JframeObj> jList = new ArrayList<JframeObj>();
+	private static ArrayList<JFrameObj> jList = new ArrayList<JFrameObj>();
 	
 	private static Image toBufferedImage(Mat m){
         int type = BufferedImage.TYPE_BYTE_GRAY;
@@ -33,12 +33,12 @@ public class Debug {
 
 	private static void displayImage(Image img2, String title) {
 		Collections.sort(jList);
-		JframeObj frame;
-		int findIdx = Collections.binarySearch(jList, new JframeObj(title));
+		JFrameObj frame;
+		int findIdx = Collections.binarySearch(jList, new JFrameObj(title));
 		if (findIdx >= 0)
 			frame = jList.get(findIdx);
 		else {
-			frame = new JframeObj(title);
+			frame = new JFrameObj(title);
 			jList.add(frame);
 		}
 		frame.updateImg(img2);
