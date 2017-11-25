@@ -26,34 +26,11 @@ public class LPRengine {
 	public static void main(String[] args) {
 		System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
 //		VideoCapture vc = new VideoCapture(0);
-		BackgroundSubtractor bs = Video.createBackgroundSubtractorMOG2();
-//		
+//		BackgroundSubtractor bs = Video.createBackgroundSubtractorMOG2();
+	
 		boolean b = true;
-//		
-//		while (b == true) {
-//			Mat a = new Mat();
-//			Mat c = new Mat();
-//			vc.read(a);
-//			Mat fgmask = new Mat();
-//			bs.apply(a, fgmask);
-//			Imgproc.threshold(fgmask, fgmask, 100, 255, Imgproc.THRESH_BINARY);
-//			Imgproc.erode(fgmask, fgmask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5,5)));
-//			//Imgproc.dilate(fgmask, fgmask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5,5)));
-//			a.copyTo(c, fgmask);
-////			//Mat gra = new Mat();
-////			//Imgproc.cvtColor(a,gra,Imgproc.COLOR_BGR2GRAY);
-////			ArrayList<Rect> faces = FaceDetect.regFace(a);
-////			for (int i=0;i<faces.toArray().length;i++) {
-////				Imgproc.rectangle(a, faces.get(i).tl(), faces.get(i).br(), new Scalar(0,0,255));
-////				c = new Mat(a, faces.get(i));
-////				//Imgproc.pyrUp(c, c, 3);
-////				Debug.imshow("Face" + i, c);
-////			}
-////			
-//			Debug.imshow("Video", fgmask);
-//		}
-		
-		Mat src = Imgcodecs.imread("img/bike/4.jpg");
+			
+		Mat src = Imgcodecs.imread("img/bike/0.jpg");
 		//Debug.imshow("Source", src);
 		
 		Mat gray = new Mat();
@@ -74,24 +51,31 @@ public class LPRengine {
 		
 		Debug.imshow("Normalized2", mini_src);
 
-		//CORE.NOR
-		
 		Mat debug = mini_src.clone();
-		
+		//Core.normalize(mini_src, mini_src, 0, 255, Core.NORM_MINMAX);
 		
 		Thread slider1 = new Thread(new Slider(val1));
 		slider1.start();
 		
-		Scanner sc = new Scanner(System.in);
 		while (b) {
-			System.out.println(val1);
 			if (val1>1 && val1%2==1) {
-			Imgproc.adaptiveThreshold(mini_src, debug, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, val1, -10);
-			Imgproc.erode(debug, debug, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2,2)));
+				Imgproc.adaptiveThreshold(mini_src, debug, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, val1, -10);
+				Imgproc.erode(debug, debug, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2,2)));
+				Imgproc.dilate(debug, debug, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(1,1)));
 			}
 			Debug.imshow("AdaptiveThreshold", debug);
+			ArrayList<MatOfPoint> contours = new ArrayList<>();
+			Mat hierarchy = new Mat();
+			Mat cp = src.clone();
+			Imgproc.findContours(debug, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+			for (int i=0; i<contours.size(); i++)
+				if (Imgproc.boundingRect(contours.get(i)).area() > 50) {
+					Rect rec = Imgproc.boundingRect(contours.get(i));
+					Imgproc.rectangle(cp, rec.tl(), rec.br(), new Scalar(0,0,255));
+				}
+			Debug.imshow("SRC", cp);
 		}
-		
+			
 		//Imgproc.adaptiveThreshold(mini_src, mini_src, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 201, -50);
 		//Debug.imshow("AdaptiveThreshold", mini_src);
 			
