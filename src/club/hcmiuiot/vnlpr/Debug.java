@@ -1,15 +1,12 @@
 package club.hcmiuiot.vnlpr;
 
-import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JSlider;
 
 import org.opencv.core.Mat;
 

@@ -1,0 +1,5 @@
+Car0 	11
+Car2	9
+Car3	11
+Car4	7
+Car5	13

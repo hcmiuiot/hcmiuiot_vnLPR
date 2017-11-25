@@ -13,7 +13,7 @@ public class FaceDetect {
 	private static CascadeClassifier eye = new CascadeClassifier("haarcascade_eye.xml");
 	
 	public FaceDetect() {
-		this.cas = new CascadeClassifier("haarcascade_frontalface_default.xml");
+		FaceDetect.cas = new CascadeClassifier("haarcascade_frontalface_default.xml");
 	}
 	
 //	public FaceDetect(CascadeClassifier cas) {
