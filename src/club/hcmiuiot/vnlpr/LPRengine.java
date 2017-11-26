@@ -45,7 +45,7 @@ public class LPRengine {
 //			Debug.imshow("FPS", a);
 //		}
 			
-		Mat src = Imgcodecs.imread("img/bike/3b.jpg");
+		Mat src = Imgcodecs.imread("img/bike/66.jpg");
 		//Debug.imshow("Source", src);
 		
 		Mat gray = new Mat();
@@ -57,7 +57,7 @@ public class LPRengine {
 		//Imgproc.pyrDown(gray, mini_src, new Size(src.cols() / scale, src.rows() / scale));
 		//Debug.imshow("PyDowned", mini_src);
 		
-		Debug.imshow("Normalized2", mini_src);
+		//Debug.imshow("Normalized2", mini_src);
 
 		Mat debug = mini_src.clone();
 		
@@ -82,8 +82,11 @@ public class LPRengine {
 				if (rec.area()>1000 && (ratio > 1.3f && ratio < 1.6f)) {
 					Imgproc.rectangle(cp, rec.tl(), rec.br(), new Scalar(0,0,255));
 					Mat plate = new Mat(debug, rec);
-					Debug.imshow("Plate "+i, plate);
 					
+					
+					Imgproc.dilate(plate, plate, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5,5)));
+					Imgproc.erode(plate, plate, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(4,4)));
+					Debug.imshow("Plate "+i, plate);
 					
 					ArrayList<MatOfPoint> pContours = new ArrayList<>();
 					Mat pHierarchy = new Mat();
@@ -98,19 +101,11 @@ public class LPRengine {
 							charFoundNum++;
 						Imgproc.rectangle(plateSrc, recChar.tl(), recChar.br(), new Scalar(0,0,255),2);
 					}
-					Debug.imshow("Plate"+i, plateSrc);
+					Debug.imshow("Char"+i, plateSrc);
 				}
 			}
 			//Debug.imshow("SRC", cp);
 		//}
 			
-		//Imgproc.adaptiveThreshold(mini_src, mini_src, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 201, -50);
-		//Debug.imshow("AdaptiveThreshold", mini_src);
-			
-		//Imgproc.threshold(mini_src, mini_src, 0, 255, Imgproc.THRESH_BINARY | Imgproc.THRESH_OTSU);
-		//Imgproc.erode(mini_src, mini_src, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2,2)));
-//		Mat se1 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2,2));
-//		Mat se2 = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3,3));
-//		
 	}
 }
