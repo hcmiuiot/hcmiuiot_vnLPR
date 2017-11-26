@@ -45,7 +45,7 @@ public class LPRengine {
 //			Debug.imshow("FPS", a);
 //		}
 			
-		Mat src = Imgcodecs.imread("img/bike/66.jpg");
+		Mat src = Imgcodecs.imread("img/bike/4.jpg");
 		//Debug.imshow("Source", src);
 		
 		Mat gray = new Mat();
@@ -90,16 +90,18 @@ public class LPRengine {
 					
 					ArrayList<MatOfPoint> pContours = new ArrayList<>();
 					Mat pHierarchy = new Mat();
-					Imgproc.findContours(plate, pContours, pHierarchy, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_NONE);
+					Imgproc.findContours(plate, pContours, pHierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
 					
 					int charFoundNum = 0;
 					Mat plateSrc = new Mat(src, rec);
 					for (int j=0; j<pContours.size(); j++) {
 						Rect recChar = Imgproc.boundingRect(pContours.get(j));
-						
-						if (recChar.area()>100)
+						float ratioChar = 1f * recChar.width / recChar.height;
+						if ((ratioChar > 0.38f && ratioChar < 0.53f) || (ratioChar > 0.28f && ratioChar < 0.35f)) {
 							charFoundNum++;
-						Imgproc.rectangle(plateSrc, recChar.tl(), recChar.br(), new Scalar(0,0,255),2);
+							Imgproc.rectangle(plateSrc, recChar.tl(), recChar.br(), new Scalar(0,0,255), 2);
+						}
+							
 					}
 					Debug.imshow("Char"+i, plateSrc);
 				}
