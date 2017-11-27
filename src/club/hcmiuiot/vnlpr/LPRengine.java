@@ -45,7 +45,7 @@ public class LPRengine {
 //			Debug.imshow("FPS", a);
 //		}
 			
-		Mat src = Imgcodecs.imread("img/bike/4.jpg");
+		Mat src = Imgcodecs.imread("img/bike/66.jpg");
 		//Debug.imshow("Source", src);
 		
 		Mat gray = new Mat();
@@ -82,32 +82,37 @@ public class LPRengine {
 				if (rec.area()>1000 && (ratio > 1.3f && ratio < 1.6f)) {
 					Imgproc.rectangle(cp, rec.tl(), rec.br(), new Scalar(0,0,255));
 					Mat plate = new Mat(debug, rec);
-					
-					
+						
 					Imgproc.dilate(plate, plate, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5,5)));
 					Imgproc.erode(plate, plate, Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(4,4)));
-					Debug.imshow("Plate "+i, plate);
+					//Debug.imshow("Plate "+i, plate);
 					
 					ArrayList<MatOfPoint> pContours = new ArrayList<>();
 					Mat pHierarchy = new Mat();
 					Imgproc.findContours(plate, pContours, pHierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_NONE);
 					
 					int charFoundNum = 0;
-					Mat plateSrc = new Mat(src, rec);
+					Mat plateSrc = plate.clone();
 					for (int j=0; j<pContours.size(); j++) {
 						Rect recChar = Imgproc.boundingRect(pContours.get(j));
 						float ratioChar = 1f * recChar.width / recChar.height;
 						if ((ratioChar > 0.38f && ratioChar < 0.53f) || (ratioChar > 0.28f && ratioChar < 0.35f)) {
 							charFoundNum++;
+							saveMat(new Mat(plate, recChar));
 							Imgproc.rectangle(plateSrc, recChar.tl(), recChar.br(), new Scalar(0,0,255), 2);
 						}
 							
 					}
-					Debug.imshow("Char"+i, plateSrc);
+					System.out.println(charFoundNum);
+					if (charFoundNum>=8)
+						Debug.imshow("Char"+i, plateSrc);
 				}
 			}
 			//Debug.imshow("SRC", cp);
-		//}
-			
+		//}		
+	}
+	
+	private static void saveMat(Mat img) {
+		Imgcodecs.imwrite("./img/trainData/"+System.nanoTime()+".jpg", img);
 	}
 }
