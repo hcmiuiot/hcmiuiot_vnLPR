@@ -17,8 +17,7 @@ public class LPRengine {
 	
 	private static int scale = 2;
 	private static Integer val1 = new Integer(3);
-	
-	
+
 	public static void setVal1(Integer val1) {
 		LPRengine.val1 = val1;
 	}
@@ -49,6 +48,7 @@ public class LPRengine {
 		//Debug.imshow("Source", src);
 		
 		Mat gray = new Mat();
+		
 		Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
 		//Debug.imshow("Gray", gray);
 		
@@ -65,6 +65,7 @@ public class LPRengine {
 		//slider1.start();
 		
 		//while (b) {
+		
 		val1 = 55;
 			if (val1>1 && val1%2==1) {
 				Imgproc.adaptiveThreshold(mini_src, debug, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, val1, -10);
@@ -93,19 +94,28 @@ public class LPRengine {
 					
 					int charFoundNum = 0;
 					Mat plateSrc = plate.clone();
+					Mat show = new Mat(src, rec);
 					for (int j=0; j<pContours.size(); j++) {
 						Rect recChar = Imgproc.boundingRect(pContours.get(j));
 						float ratioChar = 1f * recChar.width / recChar.height;
 						if ((ratioChar > 0.38f && ratioChar < 0.53f) || (ratioChar > 0.28f && ratioChar < 0.35f)) {
 							charFoundNum++;
-							saveMat(new Mat(plate, recChar));
-							Imgproc.rectangle(plateSrc, recChar.tl(), recChar.br(), new Scalar(0,0,255), 2);
+							
+							Mat charMat = new Mat(plateSrc, recChar);
+							System.out.println("" + recChar.height + " - " + rec.height);
+							int nonZero = Core.countNonZero(charMat);
+							double area = recChar.area();
+							if (1.0f* recChar.height / rec.height < 0.3f) 
+								continue;
+							
+							//saveMat(new Mat(plate, recChar));
+							Imgproc.rectangle(show, recChar.tl(), recChar.br(), new Scalar(0,0,255), 2);
 						}
 							
 					}
 					System.out.println(charFoundNum);
 					if (charFoundNum>=8)
-						Debug.imshow("Char"+i, plateSrc);
+						Debug.imshow("Char"+i, show);
 				}
 			}
 			//Debug.imshow("SRC", cp);
